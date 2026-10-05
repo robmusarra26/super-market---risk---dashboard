@@ -30,19 +30,19 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px 9px;border-bottom:1
     <div>
       <h1>Super Market Risk Dashboard</h1>
       <div class="sub muted">Plain-English monitoring of the market conditions most relevant to a diversified superannuation strategy.</div>
-      <div id="status" class="status">Loading data…</div>
+      <div id="status" class="status">Loading data…</div><div class="panel" style="margin-top:14px;padding:14px"><div class="kicker">How to read this dashboard</div><div class="small muted">Look for combinations of signals rather than relying on one number. The most useful question is whether yields, credit stress, earnings, inflation and employment are starting to point in the same direction.</div></div>
     </div>
   </div>
 
   <div class="grid g2" style="margin-top:18px">
     <section class="panel">
-      <div class="kicker">Current regime</div>
+      <div class="kicker">Current regime</div><div class="small muted" style="margin-top:5px">A plain-English summary of the market environment that today’s signals most closely resemble.</div>
       <div id="regime" class="regime">Calculating…</div>
       <div id="regimeText" class="small muted"></div>
       <div class="row" style="margin-top:16px"><div><div class="kicker">Overall risk score</div><div id="risk" class="score">—</div></div><div id="riskWord"></div></div>
     </section>
     <section class="panel">
-      <div class="kicker">Manual weekly inputs</div>
+      <div class="kicker">Manual weekly inputs</div><div class="small muted" style="margin-top:5px">These two inputs fill gaps that are harder to source reliably for free. They help the dashboard judge whether share-market fundamentals still look healthy.</div>
       <div class="small muted">Kept manual until we add dependable free sources.</div>
       <div class="manual">
         <label>Corporate earnings<select id="earnings"><option value="strong" selected>Strong</option><option value="neutral">Neutral</option><option value="weak">Weakening</option></select></label>
@@ -52,57 +52,57 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px 9px;border-bottom:1
   </div>
 
   <section class="panel" style="margin-top:16px">
-    <div class="row"><div><div class="kicker">Weekly watch</div><div class="small muted">Automatically flags meaningful movement rather than every daily wiggle.</div></div></div>
+    <div class="row"><div><div class="kicker">Weekly watch</div><div class="small muted">Automatically flags meaningful movement rather than every daily wiggle. This is the quickest place to see whether risk is beginning to build.</div></div></div>
     <div id="alerts" class="grid g3" style="margin-top:12px"></div>
   </section>
 
   <section class="panel" style="margin-top:16px">
-    <div class="kicker">Tier 1 — main decision signals</div>
+    <div class="kicker">Tier 1 — main decision signals</div><div class="small muted" style="margin-top:5px">These carry the most weight in the dashboard because they tell us about the cost of money, corporate stress and whether profits are still supporting share prices.</div>
     <div class="grid g3" style="margin-top:12px">
-      <div class="metric"><div class="kicker">US 10-year yield</div><div id="v-DGS10" class="value">—</div><div id="s-DGS10" class="trend">—</div><svg id="c-DGS10" class="spark"></svg><div id="d-DGS10" class="date"></div></div>
-      <div class="metric"><div class="kicker">High-yield credit spread</div><div id="v-BAMLH0A0HYM2" class="value">—</div><div id="s-BAMLH0A0HYM2" class="trend">—</div><svg id="c-BAMLH0A0HYM2" class="spark"></svg><div id="d-BAMLH0A0HYM2" class="date"></div></div>
-      <div class="metric"><div class="kicker">Corporate earnings</div><div id="v-EARN" class="value">Strong</div><div id="s-EARN" class="trend good">Supportive</div><div class="date">Manual weekly input</div></div>
+      <div class="metric"><div class="kicker">US 10-year yield</div><div class="small muted" style="margin-top:5px">The cost of long-term borrowing. Rising yields can pressure shares, property and bond prices.</div><div id="v-DGS10" class="value">—</div><div id="s-DGS10" class="trend">—</div><svg id="c-DGS10" class="spark"></svg><div id="d-DGS10" class="date"></div></div>
+      <div class="metric"><div class="kicker">High-yield credit spread</div><div class="small muted" style="margin-top:5px">The extra interest riskier companies must pay over government bonds. Rising spreads mean investors are becoming more worried about company debt.</div><div id="v-BAMLH0A0HYM2" class="value">—</div><div id="s-BAMLH0A0HYM2" class="trend">—</div><svg id="c-BAMLH0A0HYM2" class="spark"></svg><div id="d-BAMLH0A0HYM2" class="date"></div></div>
+      <div class="metric"><div class="kicker">Corporate earnings</div><div class="small muted" style="margin-top:5px">Shows whether company profits are still supporting share prices. Weakening earnings usually make equities more vulnerable.</div><div id="v-EARN" class="value">Strong</div><div id="s-EARN" class="trend good">Supportive</div><div class="date">Manual weekly input</div></div>
     </div>
   </section>
 
   <section class="panel" style="margin-top:16px">
-    <div class="kicker">Tier 2 — early warning / confirmation</div>
+    <div class="kicker">Tier 2 — early warning / confirmation</div><div class="small muted" style="margin-top:5px">These help explain why the main signals are moving and whether recession or inflation risk is strengthening.</div>
     <div class="grid g3" style="margin-top:12px">
-      <div class="metric"><div class="kicker">Core PCE inflation</div><div id="v-PCEPILFE" class="value">—</div><div id="s-PCEPILFE" class="trend">—</div><svg id="c-PCEPILFE" class="spark"></svg><div id="d-PCEPILFE" class="date"></div></div>
-      <div class="metric"><div class="kicker">Initial jobless claims</div><div id="v-ICSA" class="value">—</div><div id="s-ICSA" class="trend">—</div><svg id="c-ICSA" class="spark"></svg><div id="d-ICSA" class="date"></div></div>
-      <div class="metric"><div class="kicker">10Y–2Y yield curve</div><div id="v-T10Y2Y" class="value">—</div><div id="s-T10Y2Y" class="trend">—</div><svg id="c-T10Y2Y" class="spark"></svg><div id="d-T10Y2Y" class="date"></div></div>
+      <div class="metric"><div class="kicker">Core PCE inflation</div><div class="small muted" style="margin-top:5px">A measure of underlying US inflation. Persistent inflation can keep interest rates and bond yields higher for longer.</div><div id="v-PCEPILFE" class="value">—</div><div id="s-PCEPILFE" class="trend">—</div><svg id="c-PCEPILFE" class="spark"></svg><div id="d-PCEPILFE" class="date"></div></div>
+      <div class="metric"><div class="kicker">Initial jobless claims</div><div class="small muted" style="margin-top:5px">An early read on the US labour market. A sustained rise can signal that the economy is starting to weaken.</div><div id="v-ICSA" class="value">—</div><div id="s-ICSA" class="trend">—</div><svg id="c-ICSA" class="spark"></svg><div id="d-ICSA" class="date"></div></div>
+      <div class="metric"><div class="kicker">10Y–2Y yield curve</div><div class="small muted" style="margin-top:5px">Compares long- and short-term government yields. It helps show what the bond market expects for growth and future interest rates.</div><div id="v-T10Y2Y" class="value">—</div><div id="s-T10Y2Y" class="trend">—</div><svg id="c-T10Y2Y" class="spark"></svg><div id="d-T10Y2Y" class="date"></div></div>
     </div>
   </section>
 
   <section class="panel" style="margin-top:16px">
-    <div class="kicker">Tier 3 — supporting signals</div>
+    <div class="kicker">Tier 3 — supporting signals</div><div class="small muted" style="margin-top:5px">These are useful confirmation signals. They matter, but they should not drive a portfolio decision by themselves.</div>
     <div class="grid g3" style="margin-top:12px">
-      <div class="metric"><div class="kicker">VIX fear gauge</div><div id="v-VIXCLS" class="value">—</div><div id="s-VIXCLS" class="trend">—</div><svg id="c-VIXCLS" class="spark"></svg><div id="d-VIXCLS" class="date"></div></div>
-      <div class="metric"><div class="kicker">WTI oil</div><div id="v-DCOILWTICO" class="value">—</div><div id="s-DCOILWTICO" class="trend">—</div><svg id="c-DCOILWTICO" class="spark"></svg><div id="d-DCOILWTICO" class="date"></div></div>
-      <div class="metric"><div class="kicker">Market breadth</div><div id="v-BREADTH" class="value">Mixed</div><div id="s-BREADTH" class="trend warn">Manual weekly signal</div><div class="date">Manual weekly input</div></div>
+      <div class="metric"><div class="kicker">VIX fear gauge</div><div class="small muted" style="margin-top:5px">A measure of expected share-market volatility. A sharp rise usually means investors are becoming more nervous.</div><div id="v-VIXCLS" class="value">—</div><div id="s-VIXCLS" class="trend">—</div><svg id="c-VIXCLS" class="spark"></svg><div id="d-VIXCLS" class="date"></div></div>
+      <div class="metric"><div class="kicker">WTI oil</div><div class="small muted" style="margin-top:5px">Oil can amplify inflation and economic shocks. A rapid rise can make it harder for central banks to cut rates.</div><div id="v-DCOILWTICO" class="value">—</div><div id="s-DCOILWTICO" class="trend">—</div><svg id="c-DCOILWTICO" class="spark"></svg><div id="d-DCOILWTICO" class="date"></div></div>
+      <div class="metric"><div class="kicker">Market breadth</div><div class="small muted" style="margin-top:5px">Shows whether a market rally is supported by many companies or just a small number of large stocks.</div><div id="v-BREADTH" class="value">Mixed</div><div id="s-BREADTH" class="trend warn">Manual weekly signal</div><div class="date">Manual weekly input</div></div>
     </div>
   </section>
 
   <section class="panel" style="margin-top:16px">
-    <div class="kicker">Change by timeframe</div>
+    <div class="kicker">Change by timeframe</div><div class="small muted" style="margin-top:5px">Shows whether a move is just a short-term fluctuation or part of a broader trend over weeks and months.</div>
     <div class="small muted">Yield and credit changes are percentage points; VIX and oil are percentage changes.</div>
     <div class="scroll"><table style="margin-top:8px"><thead><tr><th>Indicator</th><th>1 week</th><th>1 month</th><th>3 months</th></tr></thead><tbody id="timeframes"></tbody></table></div>
   </section>
 
   <div class="grid g2" style="margin-top:16px">
-    <section class="panel"><div class="kicker">Scenario match</div><div class="small muted">Similarity score only — not a forecast probability.</div><div id="scenarios"></div></section>
-    <section class="panel"><div class="kicker">Portfolio tendency in this regime</div><div class="small muted">Historical behaviour guide only.</div><table style="margin-top:8px"><thead><tr><th>Strategy</th><th>Current tendency</th></tr></thead><tbody id="strategies"></tbody></table></section>
+    <section class="panel"><div class="kicker">Scenario match</div><div class="small muted">Shows which historical type of market environment today most resembles. Similarity score only — not a forecast probability.</div><div id="scenarios"></div></section>
+    <section class="panel"><div class="kicker">Portfolio tendency in this regime</div><div class="small muted">Shows how different portfolio structures have historically tended to behave in this type of environment. Historical behaviour guide only.</div><table style="margin-top:8px"><thead><tr><th>Strategy</th><th>Current tendency</th></tr></thead><tbody id="strategies"></tbody></table></section>
   </div>
 
   <section class="panel" style="margin-top:16px">
-    <div class="kicker">Risk history</div>
+    <div class="kicker">Risk history</div><div class="small muted" style="margin-top:5px">Shows whether the overall market-risk environment has been building, easing or staying broadly stable over time.</div>
     <div class="small muted">This begins building from today. It uses automated indicators with the default manual assumptions of strong earnings and mixed breadth.</div>
     <svg id="riskHistory" class="spark" style="height:90px;margin-top:12px"></svg>
     <div id="historyNote" class="date"></div>
   </section>
 
   <section class="panel" style="margin-top:16px">
-    <div class="kicker">What would change our view?</div>
+    <div class="kicker">What would change our view?</div><div class="small muted" style="margin-top:5px">Lists the changes that would make the dashboard interpret the environment differently. It helps focus on evidence rather than headlines.</div>
     <table><tbody>
       <tr><td>🟠</td><td>Credit spread above ~4%</td><td>Corporate stress is becoming more meaningful.</td></tr>
       <tr><td>🔴</td><td>Credit >5% + claims rising + earnings weakening</td><td>Recession / credit-stress risk materially increases.</td></tr>
