@@ -38,6 +38,7 @@ def risk_at(series, ds):
     y=val_before(series,"DGS10",ds)
     cr=val_before(series,"BAMLH0A0HYM2",ds)
     v=val_before(series,"VIXCLS",ds)
+    curve=val_before(series,"T10Y2Y",ds)
 
     claims=series["ICSA"]["observations"]
     ci=idx_before(claims,ds)
@@ -51,14 +52,22 @@ def risk_at(series, ds):
         inf=(pce[pi]["value"]/pce[pi-12]["value"]-1)*100
         ip=(pce[pi-1]["value"]/pce[pi-13]["value"]-1)*100
 
+    oil=series["DCOILWTICO"]["observations"]
+    oi=idx_before(oil,ds)
+    od=0.0
+    if oi>=0:
+        oj=max(0,oi-20)
+        base=oil[oj]["value"]
+        od=((oil[oi]["value"]/base)-1)*100 if base else 0.0
+
     r=0.0
-    r += 2.2 if y>=5.3 else 1.6 if y>=4.8 else 1.0 if y>=4 else 0.4
-    r += 2.4 if cr>=5 else 1.7 if cr>=4 else 1.0 if cr>=3 else 0.3
-    r += 0.2  # default earnings = strong
-    r += 1.4 if inf>ip+0.1 else 0.8 if inf>2.7 else 0.2
-    r += 1.3 if cl>cl4*1.08 else 0.7 if cl>cl4*1.03 else 0.2
-    r += 0.4  # default breadth = mixed
-    r += 0.8 if v>=30 else 0.4 if v>=22 else 0.1
+    r += 2.4 if y>=5.3 else 1.8 if y>=4.8 else 1.0 if y>=4 else 0.4
+    r += 2.6 if cr>=5 else 1.8 if cr>=4 else 1.0 if cr>=3 else 0.3
+    r += 1.5 if inf>ip+0.1 else 0.9 if inf>2.7 else 0.2
+    r += 1.4 if cl>cl4*1.08 else 0.8 if cl>cl4*1.03 else 0.2
+    r += 0.7 if curve<0 else 0.2
+    r += 0.9 if v>=30 else 0.5 if v>=22 else 0.1
+    r += 0.5 if od>15 else 0.3 if od>8 else 0.1
     return min(10,round(r,1))
 
 def month_end(y,m):
