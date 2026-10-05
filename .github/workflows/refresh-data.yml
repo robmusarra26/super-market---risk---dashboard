@@ -15,13 +15,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Refresh FRED data
+      - name: Refresh FRED data and history
         run: python update_data.py
       - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data.json
+          git add data.json history.json
           if git diff --cached --quiet; then
             echo "No data changes"
           else
