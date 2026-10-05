@@ -59,12 +59,10 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px 9px;border-bottom:1
 </div>
     </section>
     <section class="panel">
-      <div class="kicker">Manual weekly inputs</div><div class="small muted" style="margin-top:5px">These two inputs fill gaps that are harder to source reliably for free. They help the dashboard judge whether share-market fundamentals still look healthy.</div>
-      <div class="small muted">Kept manual until we add dependable free sources.</div>
-      <div class="manual">
-        <label>Corporate earnings<select id="earnings"><option value="strong" selected>Strong</option><option value="neutral">Neutral</option><option value="weak">Weakening</option></select></label>
-        <label>Market breadth<select id="breadth"><option value="broad">Broad / healthy</option><option value="mixed" selected>Mixed</option><option value="narrow">Narrow / weakening</option></select></label>
-      </div>
+      <div class="kicker">Score methodology</div>
+      <div class="small muted" style="margin-top:5px">The risk score now uses only objective, automatically refreshed data. No part of the score depends on you guessing whether earnings or market breadth are strong or weak.</div>
+      <div class="small muted" style="margin-top:10px"><strong>Included:</strong> US 10-year yield, credit spreads, core inflation, jobless claims, yield curve, VIX and oil.</div>
+      <div class="small muted" style="margin-top:7px"><strong>Not scored:</strong> corporate earnings and market breadth until we can source them reliably and automatically.</div>
     </section>
   </div>
 
@@ -78,7 +76,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px 9px;border-bottom:1
     <div class="grid g3" style="margin-top:12px">
       <div class="metric"><div class="kicker">US 10-year yield</div><div class="small muted" style="margin-top:5px">The cost of long-term borrowing. Rising yields can pressure shares, property and bond prices. <strong>For your super:</strong> a sustained rise can be harder on growth-heavy options and can also temporarily reduce fixed-interest values; stabilising or falling yields usually improve the backdrop for bonds.</div><div id="v-DGS10" class="value">—</div><div id="s-DGS10" class="trend">—</div><svg id="c-DGS10" class="spark"></svg><div id="d-DGS10" class="date"></div></div>
       <div class="metric"><div class="kicker">High-yield credit spread</div><div class="small muted" style="margin-top:5px">The extra interest riskier companies must pay over government bonds. Rising spreads mean investors are becoming more worried about company debt. <strong>For your super:</strong> widening spreads usually increase risk for share-heavy portfolios; calm or falling spreads suggest companies are coping better.</div><div id="v-BAMLH0A0HYM2" class="value">—</div><div id="s-BAMLH0A0HYM2" class="trend">—</div><svg id="c-BAMLH0A0HYM2" class="spark"></svg><div id="d-BAMLH0A0HYM2" class="date"></div></div>
-      <div class="metric"><div class="kicker">Corporate earnings</div><div class="small muted" style="margin-top:5px">Shows whether company profits are still supporting share prices. Weakening earnings usually make equities more vulnerable. <strong>For your super:</strong> strong earnings can support growth options even when rates are high; falling earnings make a defensive allocation more valuable.</div><div id="v-EARN" class="value">Strong</div><div id="s-EARN" class="trend good">Supportive</div><div class="date">Manual weekly input</div></div>
+      <div class="metric"><div class="kicker">Corporate earnings</div><div class="small muted" style="margin-top:5px">Company profit trends are important for shares, but this dashboard does not score them until a dependable automatic source is available. <strong>For your super:</strong> weakening earnings would normally make growth-heavy options more vulnerable.</div><div class="value">Not scored</div><div class="trend warn">Awaiting automatic source</div><div class="date">Excluded from risk score</div></div>
     </div>
   </section>
 
@@ -96,7 +94,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px 9px;border-bottom:1
     <div class="grid g3" style="margin-top:12px">
       <div class="metric"><div class="kicker">VIX fear gauge</div><div class="small muted" style="margin-top:5px">A measure of expected share-market volatility. A sharp rise usually means investors are becoming more nervous. <strong>For your super:</strong> a sharp VIX rise often means more short-term volatility in growth assets, but it is better used as confirmation than as a stand-alone signal.</div><div id="v-VIXCLS" class="value">—</div><div id="s-VIXCLS" class="trend">—</div><svg id="c-VIXCLS" class="spark"></svg><div id="d-VIXCLS" class="date"></div></div>
       <div class="metric"><div class="kicker">WTI oil</div><div class="small muted" style="margin-top:5px">Oil can amplify inflation and economic shocks. A rapid rise can make it harder for central banks to cut rates. <strong>For your super:</strong> a large oil spike can hurt both shares and bonds if it pushes inflation higher, while falling oil can reduce inflation pressure.</div><div id="v-DCOILWTICO" class="value">—</div><div id="s-DCOILWTICO" class="trend">—</div><svg id="c-DCOILWTICO" class="spark"></svg><div id="d-DCOILWTICO" class="date"></div></div>
-      <div class="metric"><div class="kicker">Market breadth</div><div class="small muted" style="margin-top:5px">Shows whether a market rally is supported by many companies or just a small number of large stocks. <strong>For your super:</strong> broad participation suggests a healthier share market; narrow breadth can make growth-heavy portfolios more vulnerable to a reversal.</div><div id="v-BREADTH" class="value">Mixed</div><div id="s-BREADTH" class="trend warn">Manual weekly signal</div><div class="date">Manual weekly input</div></div>
+      <div class="metric"><div class="kicker">Market breadth</div><div class="small muted" style="margin-top:5px">Breadth shows whether a rally is supported by many companies or only a few large stocks. It remains useful context, but is not scored until we add an automatic source. <strong>For your super:</strong> narrow breadth can make growth-heavy portfolios more vulnerable to a reversal.</div><div class="value">Not scored</div><div class="trend warn">Awaiting automatic source</div><div class="date">Excluded from risk score</div></div>
     </div>
   </section>
 
@@ -148,7 +146,6 @@ function transform(data){
   spark("c-"+sid,obs);
  }
 }
-function manual(){const e=$("earnings").value;setM("EARN",e==="strong"?"Strong":e==="neutral"?"Neutral":"Weakening",e==="strong"?"Supportive":e==="neutral"?"Mixed":"Deteriorating",e==="strong"?"good":e==="weak"?"bad":"warn","Manual");const b=$("breadth").value;setM("BREADTH",b==="broad"?"Broad":b==="mixed"?"Mixed":"Narrow",b==="broad"?"Healthy participation":b==="mixed"?"Mixed participation":"Weakening participation",b==="broad"?"good":b==="narrow"?"bad":"warn","Manual")}
 function riskLabel(r){return r<3?"Low":r<4.5?"Guarded":r<6?"Elevated":r<7.5?"High":"Very high"}
 function riskMeaning(r){
  if(r<3)return "Most monitored stress signals are relatively calm.";
@@ -157,20 +154,35 @@ function riskMeaning(r){
  if(r<7.5)return "Multiple indicators are pointing to significant market or economic stress.";
  return "A broad set of indicators is signalling unusually high stress.";
 }
-function calcRisk(earn,breadth){
- const y=S.DGS10?.value||0,cr=S.BAMLH0A0HYM2?.value||0,v=S.VIXCLS?.value||0,cl=S.ICSA?.value||0,cl4=S.ICSA?.prev4||cl,inf=S.PCEPILFE?.yoy||0,ip=S.PCEPILFE?.yoyPrev||inf;
- let r=0;r+=y>=5.3?2.2:y>=4.8?1.6:y>=4?1:.4;r+=cr>=5?2.4:cr>=4?1.7:cr>=3?1:.3;r+=earn==="weak"?1.8:earn==="neutral"?.8:.2;r+=inf>ip+.1?1.4:inf>2.7?.8:.2;r+=cl>cl4*1.08?1.3:cl>cl4*1.03?.7:.2;r+=breadth==="narrow"?.8:breadth==="mixed"?.4:.1;r+=v>=30?.8:v>=22?.4:.1;return Math.min(10,Math.round(r*10)/10)
+function calcRisk(){
+ const y=S.DGS10?.value||0,cr=S.BAMLH0A0HYM2?.value||0,v=S.VIXCLS?.value||0,cl=S.ICSA?.value||0,cl4=S.ICSA?.prev4||cl,inf=S.PCEPILFE?.yoy||0,ip=S.PCEPILFE?.yoyPrev||inf,curve=S.T10Y2Y?.value||0,oil=S.DCOILWTICO?.obs||[];
+ let r=0;
+ r+=y>=5.3?2.4:y>=4.8?1.8:y>=4?1:.4;
+ r+=cr>=5?2.6:cr>=4?1.8:cr>=3?1:.3;
+ r+=inf>ip+.1?1.5:inf>2.7?.9:.2;
+ r+=cl>cl4*1.08?1.4:cl>cl4*1.03?.8:.2;
+ r+=curve<0?.7:.2;
+ r+=v>=30?.9:v>=22?.5:.1;
+ const od=change(oil,20,false); r+=od!=null&&od>15?.5:od!=null&&od>8?.3:.1;
+ return Math.min(10,Math.round(r*10)/10)
 }
 function classify(){
- const y=S.DGS10?.value||0,cr=S.BAMLH0A0HYM2?.value||0,cl=S.ICSA?.value||0,cl4=S.ICSA?.prev4||cl,inf=S.PCEPILFE?.yoy||0,ip=S.PCEPILFE?.yoyPrev||inf,e=$("earnings").value,b=$("breadth").value,risk=calcRisk(e,b);
- let rg,desc;if(cr>=5&&e==="weak"&&cl>cl4*1.08){rg="Recession / credit stress";desc="Corporate stress, weaker employment and weaker earnings are lining up."}
- else if(y>=5.1&&inf>ip+.1&&cr>=4){rg="Inflation shock / stagflation risk";desc="Long-term yields and inflation pressure are rising while credit stress is building."}
- else if(y>=4.8&&cr<4.5&&e!=="weak"){rg="Higher-for-longer / pressure building";desc="Borrowing costs are high, but corporate stress is not yet severe."}
- else if(y<4.8&&inf<=ip&&cr<4&&e==="strong"){rg="Soft landing";desc="Inflation is easing without major credit or earnings deterioration."}
- else if(risk<3.5){rg="Healthy expansion";desc="Financial stress is relatively contained and fundamentals remain supportive."}
- else{rg="Mixed / transition";desc="Signals are not aligned strongly enough to identify one dominant regime."}
+ const y=S.DGS10?.value||0,cr=S.BAMLH0A0HYM2?.value||0,cl=S.ICSA?.value||0,cl4=S.ICSA?.prev4||cl,inf=S.PCEPILFE?.yoy||0,ip=S.PCEPILFE?.yoyPrev||inf,curve=S.T10Y2Y?.value||0,v=S.VIXCLS?.value||0,oil=S.DCOILWTICO?.obs||[],risk=calcRisk();
+ let rg,desc;
+ if(cr>=5&&cl>cl4*1.08&&v>=25){rg="Recession / credit stress";desc="Credit stress, labour weakness and market volatility are lining up."}
+ else if(y>=5.1&&inf>ip+.1&&change(oil,20,false)>8){rg="Inflation shock / stagflation risk";desc="Long-term yields, inflation pressure and oil are all moving in an unfriendly direction."}
+ else if(y>=4.8&&cr<4.5&&cl<=cl4*1.05){rg="Higher-for-longer / pressure building";desc="Borrowing costs are high, but credit and labour stress are not yet severe."}
+ else if(y<4.8&&inf<=ip&&cr<4&&cl<=cl4*1.03){rg="Soft landing";desc="Inflation and yields are easing without a clear deterioration in credit or jobs."}
+ else if(risk<3.5){rg="Healthy expansion";desc="Financial stress is relatively contained across the monitored indicators."}
+ else{rg="Mixed / transition";desc="The objective signals are not aligned strongly enough to identify one dominant regime."}
  $("risk").textContent=risk.toFixed(1)+"/10";$("riskWord").textContent=riskLabel(risk);$("riskWord").className=risk>=6?"bad":risk>=4.5?"warn":"good";$("riskMeaning").textContent=riskMeaning(risk);$("regime").textContent=rg;$("regimeText").textContent=desc;
- const raw={"Healthy expansion":(e==="strong"?3:1)+(cl<=cl4?2:0)+(cr<3.5?2:0)+(b==="broad"?2:0),"Higher-for-longer":(y>=4.8?4:1)+(cr<4.5?2:0)+(e!=="weak"?2:0)+(inf>=2.6?2:0),"Inflation shock":(y>=5.1?3:0)+(inf>ip+.1?4:inf>=2.8?2:0)+(cr>=4?2:0),"Soft landing":(inf<=ip?3:0)+(cr<4?2:0)+(e==="strong"?3:0)+(cl<=cl4*1.03?2:0),"Recession / credit stress":(cr>=5?4:cr>=4?2:0)+(e==="weak"?3:0)+(cl>cl4*1.08?3:cl>cl4*1.03?1:0)};
+ const raw={
+ "Healthy expansion":(cl<=cl4?2:0)+(cr<3.5?2:0)+(v<20?2:0)+(curve>=0?1:0),
+ "Higher-for-longer":(y>=4.8?4:1)+(cr<4.5?2:0)+(inf>=2.6?2:0)+(cl<=cl4*1.05?2:0),
+ "Inflation shock":(y>=5.1?3:0)+(inf>ip+.1?4:inf>=2.8?2:0)+(change(oil,20,false)>8?2:0),
+ "Soft landing":(inf<=ip?3:0)+(cr<4?2:0)+(cl<=cl4*1.03?3:0)+(y<4.8?2:0),
+ "Recession / credit stress":(cr>=5?4:cr>=4?2:0)+(cl>cl4*1.08?3:cl>cl4*1.03?1:0)+(v>=30?3:v>=22?1:0)
+ };
  const tot=Object.values(raw).reduce((a,x)=>a+x,0)||1;$("scenarios").innerHTML=Object.entries(raw).map(([n,x])=>[n,Math.round(x/tot*100)]).sort((a,b)=>b[1]-a[1]).map(([n,p])=>`<div class="sc"><div class="row"><span>${n}</span><strong>${p}%</strong></div><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`).join("");
  const maps={"Healthy expansion":[["MLC Aggressive","🟢 Strong upside / high risk"],["MLC Growth","🟢 Well suited"],["40 Fixed / 50 Growth / 10 Cash","🟡 More conservative"],["60 Fixed / 30 Growth / 10 Cash","🔴 Likely too defensive"],["100% Fixed Interest","🔴 Low growth participation"]],"Higher-for-longer / pressure building":[["MLC Aggressive","🔴 More vulnerable"],["MLC Growth","🟡 Moderate"],["40 Fixed / 50 Growth / 10 Cash","🟢 Diversified"],["60 Fixed / 30 Growth / 10 Cash","🟢 Stronger capital protection"],["100% Fixed Interest","🟡 Rate-sensitive while yields rise"]],"Inflation shock / stagflation risk":[["MLC Aggressive","🔴 Very vulnerable"],["MLC Growth","🔴 Vulnerable"],["40 Fixed / 50 Growth / 10 Cash","🟡 Moderate"],["60 Fixed / 30 Growth / 10 Cash","🟢 Defensive, but bonds can still fall"],["100% Fixed Interest","🟡 Still exposed to rising yields"]],"Soft landing":[["MLC Aggressive","🟢 Strong upside"],["MLC Growth","🟢 Well suited"],["40 Fixed / 50 Growth / 10 Cash","🟢 Well suited"],["60 Fixed / 30 Growth / 10 Cash","🟡 Positive but conservative"],["100% Fixed Interest","🟡 Positive, less upside"]],"Recession / credit stress":[["MLC Aggressive","🔴 Very vulnerable"],["MLC Growth","🔴 Vulnerable"],["40 Fixed / 50 Growth / 10 Cash","🟢 Defensive"],["60 Fixed / 30 Growth / 10 Cash","🟢 Strong capital protection"],["100% Fixed Interest","🟢 Historically favourable to quality bonds"]],"Mixed / transition":[["MLC Aggressive","🔴 High uncertainty"],["MLC Growth","🟡 Moderate"],["40 Fixed / 50 Growth / 10 Cash","🟢 Diversified"],["60 Fixed / 30 Growth / 10 Cash","🟢 Defensive"],["100% Fixed Interest","🟡 Depends on yield direction"]]};
  $("strategies").innerHTML=(maps[rg]||maps["Mixed / transition"]).map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("");
@@ -206,7 +218,7 @@ function renderHistory(h){
  const arrow=d1>0.25?"↑ rising":d1<-0.25?"↓ falling":"→ broadly stable";
  rd.textContent="Direction: "+arrow+" • 1m "+(d1>=0?"+":"")+d1.toFixed(1)+" • 3m "+(d3>=0?"+":"")+d3.toFixed(1);
 const vals=a.map(x=>x.risk),mn=Math.min(...vals),mx=Math.max(...vals),sp=mx-mn||1,w=600,hh=90,pts=vals.map((v,i)=>`${i/(vals.length-1)*w},${hh-8-(v-mn)/sp*(hh-16)}`).join(" ");const svg=$("riskHistory");svg.setAttribute("viewBox",`0 0 ${w} ${hh}`);svg.innerHTML=`<polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="3"/>`;$("historyNote").textContent=`${a.length} stored observations • latest automated risk ${vals[vals.length-1].toFixed(1)}/10`}
-async function load(){try{const [r,h]=await Promise.all([fetch("data.json?"+Date.now()),fetch("history.json?"+Date.now())]);if(!r.ok)throw 0;const d=await r.json();const hd=h.ok?await h.json():{history:[]};transform(d);manual();classify();renderAlerts();renderTimeframes();renderHistory(hd);$("status").textContent="Last data refresh: "+new Date(d.updated_utc).toLocaleString();}catch(e){$("status").textContent="Data file unavailable. The automatic refresh may not have run yet.";}}
-$("earnings").addEventListener("change",()=>{manual();classify()});$("breadth").addEventListener("change",()=>{manual();classify()});load();
+async function load(){try{const [r,h]=await Promise.all([fetch("data.json?"+Date.now()),fetch("history.json?"+Date.now())]);if(!r.ok)throw 0;const d=await r.json();const hd=h.ok?await h.json():{history:[]};transform(d);classify();renderAlerts();renderTimeframes();renderHistory(hd);$("status").textContent="Last data refresh: "+new Date(d.updated_utc).toLocaleString();}catch(e){$("status").textContent="Data file unavailable. The automatic refresh may not have run yet.";}}
+load();
 </script>
 </body></html>
