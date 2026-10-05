@@ -42,7 +42,21 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px 9px;border-bottom:1
       <div class="kicker">Current regime</div><div class="small muted" style="margin-top:5px">A plain-English summary of the market environment that today’s signals most closely resemble.</div>
       <div id="regime" class="regime">Calculating…</div>
       <div id="regimeText" class="small muted"></div>
-      <div class="row" style="margin-top:16px"><div><div class="kicker">Overall risk score</div><div id="risk" class="score">—</div></div><div id="riskWord"></div></div>
+      <div class="row" style="margin-top:16px">
+  <div>
+    <div class="kicker">Overall risk score</div>
+    <div id="risk" class="score">—</div>
+    <div id="riskMeaning" class="small muted" style="margin-top:5px"></div>
+  </div>
+  <div style="text-align:right">
+    <div id="riskWord"></div>
+    <div id="riskDirection" class="small muted" style="margin-top:7px"></div>
+  </div>
+</div>
+<div class="small muted" style="margin-top:12px">
+  <strong>How to read it:</strong> 0–2.9 = Low • 3.0–4.4 = Guarded • 4.5–5.9 = Elevated • 6.0–7.4 = High • 7.5–10 = Very high.
+  The score is a monitoring gauge, not a forecast of market losses.
+</div>
     </section>
     <section class="panel">
       <div class="kicker">Manual weekly inputs</div><div class="small muted" style="margin-top:5px">These two inputs fill gaps that are harder to source reliably for free. They help the dashboard judge whether share-market fundamentals still look healthy.</div>
@@ -135,6 +149,14 @@ function transform(data){
  }
 }
 function manual(){const e=$("earnings").value;setM("EARN",e==="strong"?"Strong":e==="neutral"?"Neutral":"Weakening",e==="strong"?"Supportive":e==="neutral"?"Mixed":"Deteriorating",e==="strong"?"good":e==="weak"?"bad":"warn","Manual");const b=$("breadth").value;setM("BREADTH",b==="broad"?"Broad":b==="mixed"?"Mixed":"Narrow",b==="broad"?"Healthy participation":b==="mixed"?"Mixed participation":"Weakening participation",b==="broad"?"good":b==="narrow"?"bad":"warn","Manual")}
+function riskLabel(r){return r<3?"Low":r<4.5?"Guarded":r<6?"Elevated":r<7.5?"High":"Very high"}
+function riskMeaning(r){
+ if(r<3)return "Most monitored stress signals are relatively calm.";
+ if(r<4.5)return "Some pressure is present, but the indicators are not yet lining up into a high-stress environment.";
+ if(r<6)return "Several risk signals are elevated and deserve closer monitoring.";
+ if(r<7.5)return "Multiple indicators are pointing to significant market or economic stress.";
+ return "A broad set of indicators is signalling unusually high stress.";
+}
 function calcRisk(earn,breadth){
  const y=S.DGS10?.value||0,cr=S.BAMLH0A0HYM2?.value||0,v=S.VIXCLS?.value||0,cl=S.ICSA?.value||0,cl4=S.ICSA?.prev4||cl,inf=S.PCEPILFE?.yoy||0,ip=S.PCEPILFE?.yoyPrev||inf;
  let r=0;r+=y>=5.3?2.2:y>=4.8?1.6:y>=4?1:.4;r+=cr>=5?2.4:cr>=4?1.7:cr>=3?1:.3;r+=earn==="weak"?1.8:earn==="neutral"?.8:.2;r+=inf>ip+.1?1.4:inf>2.7?.8:.2;r+=cl>cl4*1.08?1.3:cl>cl4*1.03?.7:.2;r+=breadth==="narrow"?.8:breadth==="mixed"?.4:.1;r+=v>=30?.8:v>=22?.4:.1;return Math.min(10,Math.round(r*10)/10)
@@ -147,7 +169,7 @@ function classify(){
  else if(y<4.8&&inf<=ip&&cr<4&&e==="strong"){rg="Soft landing";desc="Inflation is easing without major credit or earnings deterioration."}
  else if(risk<3.5){rg="Healthy expansion";desc="Financial stress is relatively contained and fundamentals remain supportive."}
  else{rg="Mixed / transition";desc="Signals are not aligned strongly enough to identify one dominant regime."}
- $("risk").textContent=risk.toFixed(1)+"/10";$("riskWord").textContent=risk>=7?"High risk":risk>=4.5?"Elevated / watch":"Lower risk";$("riskWord").className=risk>=7?"bad":risk>=4.5?"warn":"good";$("regime").textContent=rg;$("regimeText").textContent=desc;
+ $("risk").textContent=risk.toFixed(1)+"/10";$("riskWord").textContent=riskLabel(risk);$("riskWord").className=risk>=6?"bad":risk>=4.5?"warn":"good";$("riskMeaning").textContent=riskMeaning(risk);$("regime").textContent=rg;$("regimeText").textContent=desc;
  const raw={"Healthy expansion":(e==="strong"?3:1)+(cl<=cl4?2:0)+(cr<3.5?2:0)+(b==="broad"?2:0),"Higher-for-longer":(y>=4.8?4:1)+(cr<4.5?2:0)+(e!=="weak"?2:0)+(inf>=2.6?2:0),"Inflation shock":(y>=5.1?3:0)+(inf>ip+.1?4:inf>=2.8?2:0)+(cr>=4?2:0),"Soft landing":(inf<=ip?3:0)+(cr<4?2:0)+(e==="strong"?3:0)+(cl<=cl4*1.03?2:0),"Recession / credit stress":(cr>=5?4:cr>=4?2:0)+(e==="weak"?3:0)+(cl>cl4*1.08?3:cl>cl4*1.03?1:0)};
  const tot=Object.values(raw).reduce((a,x)=>a+x,0)||1;$("scenarios").innerHTML=Object.entries(raw).map(([n,x])=>[n,Math.round(x/tot*100)]).sort((a,b)=>b[1]-a[1]).map(([n,p])=>`<div class="sc"><div class="row"><span>${n}</span><strong>${p}%</strong></div><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`).join("");
  const maps={"Healthy expansion":[["MLC Aggressive","🟢 Strong upside / high risk"],["MLC Growth","🟢 Well suited"],["40 Fixed / 50 Growth / 10 Cash","🟡 More conservative"],["60 Fixed / 30 Growth / 10 Cash","🔴 Likely too defensive"],["100% Fixed Interest","🔴 Low growth participation"]],"Higher-for-longer / pressure building":[["MLC Aggressive","🔴 More vulnerable"],["MLC Growth","🟡 Moderate"],["40 Fixed / 50 Growth / 10 Cash","🟢 Diversified"],["60 Fixed / 30 Growth / 10 Cash","🟢 Stronger capital protection"],["100% Fixed Interest","🟡 Rate-sensitive while yields rise"]],"Inflation shock / stagflation risk":[["MLC Aggressive","🔴 Very vulnerable"],["MLC Growth","🔴 Vulnerable"],["40 Fixed / 50 Growth / 10 Cash","🟡 Moderate"],["60 Fixed / 30 Growth / 10 Cash","🟢 Defensive, but bonds can still fall"],["100% Fixed Interest","🟡 Still exposed to rising yields"]],"Soft landing":[["MLC Aggressive","🟢 Strong upside"],["MLC Growth","🟢 Well suited"],["40 Fixed / 50 Growth / 10 Cash","🟢 Well suited"],["60 Fixed / 30 Growth / 10 Cash","🟡 Positive but conservative"],["100% Fixed Interest","🟡 Positive, less upside"]],"Recession / credit stress":[["MLC Aggressive","🔴 Very vulnerable"],["MLC Growth","🔴 Vulnerable"],["40 Fixed / 50 Growth / 10 Cash","🟢 Defensive"],["60 Fixed / 30 Growth / 10 Cash","🟢 Strong capital protection"],["100% Fixed Interest","🟢 Historically favourable to quality bonds"]],"Mixed / transition":[["MLC Aggressive","🔴 High uncertainty"],["MLC Growth","🟡 Moderate"],["40 Fixed / 50 Growth / 10 Cash","🟢 Diversified"],["60 Fixed / 30 Growth / 10 Cash","🟢 Defensive"],["100% Fixed Interest","🟡 Depends on yield direction"]]};
@@ -164,7 +186,26 @@ function renderAlerts(){
  if(inf?.yoy!=null)out.push([inf.yoy>inf.yoyPrev+.05?"🟠 Inflation re-accelerating":inf.yoy<inf.yoyPrev-.05?"🟢 Inflation easing":"🟡 Inflation sticky",`Core PCE ${inf.yoy.toFixed(2)}% YoY vs ${inf.yoyPrev.toFixed(2)}% prior month.`]);
  $("alerts").innerHTML=out.slice(0,3).map(x=>`<div class="alert"><strong>${x[0]}</strong><div class="small muted">${x[1]}</div></div>`).join("")
 }
-function renderHistory(h){const a=(h?.history||[]).slice(-52);if(a.length<2){$("historyNote").textContent="History has just started collecting; a useful trend line will build automatically over coming weeks.";return}const vals=a.map(x=>x.risk),mn=Math.min(...vals),mx=Math.max(...vals),sp=mx-mn||1,w=600,hh=90,pts=vals.map((v,i)=>`${i/(vals.length-1)*w},${hh-8-(v-mn)/sp*(hh-16)}`).join(" ");const svg=$("riskHistory");svg.setAttribute("viewBox",`0 0 ${w} ${hh}`);svg.innerHTML=`<polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="3"/>`;$("historyNote").textContent=`${a.length} stored observations • latest automated risk ${vals[vals.length-1].toFixed(1)}/10`}
+function renderHistory(h){
+ const a=(h?.history||[]).slice(-60);
+ const rd=$("riskDirection");
+ if(a.length<2){
+   $("historyNote").textContent="History has just started collecting; a useful trend line will build automatically over coming weeks.";
+   rd.textContent="Direction: building history";
+   return
+ }
+ const latestRisk=a[a.length-1].risk;
+ const byDate=(days)=>{
+   const target=new Date(a[a.length-1].date+"T00:00:00Z"); target.setUTCDate(target.getUTCDate()-days);
+   let best=a[0];
+   for(const x of a){if(new Date(x.date+"T00:00:00Z")<=target)best=x;else break}
+   return best.risk;
+ };
+ const m1=byDate(30),m3=byDate(90);
+ const d1=latestRisk-m1,d3=latestRisk-m3;
+ const arrow=d1>0.25?"↑ rising":d1<-0.25?"↓ falling":"→ broadly stable";
+ rd.textContent="Direction: "+arrow+" • 1m "+(d1>=0?"+":"")+d1.toFixed(1)+" • 3m "+(d3>=0?"+":"")+d3.toFixed(1);
+const vals=a.map(x=>x.risk),mn=Math.min(...vals),mx=Math.max(...vals),sp=mx-mn||1,w=600,hh=90,pts=vals.map((v,i)=>`${i/(vals.length-1)*w},${hh-8-(v-mn)/sp*(hh-16)}`).join(" ");const svg=$("riskHistory");svg.setAttribute("viewBox",`0 0 ${w} ${hh}`);svg.innerHTML=`<polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="3"/>`;$("historyNote").textContent=`${a.length} stored observations • latest automated risk ${vals[vals.length-1].toFixed(1)}/10`}
 async function load(){try{const [r,h]=await Promise.all([fetch("data.json?"+Date.now()),fetch("history.json?"+Date.now())]);if(!r.ok)throw 0;const d=await r.json();const hd=h.ok?await h.json():{history:[]};transform(d);manual();classify();renderAlerts();renderTimeframes();renderHistory(hd);$("status").textContent="Last data refresh: "+new Date(d.updated_utc).toLocaleString();}catch(e){$("status").textContent="Data file unavailable. The automatic refresh may not have run yet.";}}
 $("earnings").addEventListener("change",()=>{manual();classify()});$("breadth").addEventListener("change",()=>{manual();classify()});load();
 </script>
