@@ -111,6 +111,28 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px 9px;border-bottom:1
   </section>
 
   <section class="panel" style="margin-top:16px">
+    <div class="kicker">Australia — inflation and RBA pressure</div>
+    <div class="small muted" style="margin-top:5px">Tracks inflation at home because Australian inflation influences RBA interest-rate decisions, Australian bond yields, the share market, the dollar and property-sensitive investments.</div>
+    <div class="grid g2" style="margin-top:12px">
+      <div class="metric">
+        <div class="kicker">Australian CPI — headline inflation</div>
+        <div class="small muted" style="margin-top:5px">Measures the overall change in prices paid by Australian households. <strong>Simple question:</strong> Is the cost of living accelerating or cooling? <strong>For your super:</strong> persistently high CPI can keep Australian interest rates higher, which can pressure fixed interest and rate-sensitive shares.</div>
+        <div id="v-AUCPI" class="value">—</div>
+        <div id="s-AUCPI" class="trend">—</div>
+        <div id="d-AUCPI" class="date"></div>
+      </div>
+      <div class="metric">
+        <div class="kicker">Australian trimmed mean inflation</div>
+        <div class="small muted" style="margin-top:5px">A cleaner measure of underlying inflation that reduces the impact of unusually large price moves. <strong>Simple question:</strong> Is broad inflation pressure still too high for the RBA? <strong>For your super:</strong> a sustained fall is generally friendlier for Australian bonds and interest-rate-sensitive assets; persistent strength can delay rate cuts.</div>
+        <div id="v-AUTRIM" class="value">—</div>
+        <div id="s-AUTRIM" class="trend">—</div>
+        <div id="d-AUTRIM" class="date"></div>
+      </div>
+    </div>
+    <div class="date" style="margin-top:10px">Source: Australian Bureau of Statistics. Shown for context and not currently included in the overall risk score.</div>
+  </section>
+
+  <section class="panel" style="margin-top:16px">
     <div class="kicker">Change by timeframe</div><div class="small muted" style="margin-top:5px">Shows whether a move is just a short-term fluctuation or part of a broader trend over weeks and months.</div>
     <div class="small muted">Yield and credit changes are percentage points; VIX and oil are percentage changes.</div>
     <div class="scroll"><table style="margin-top:8px"><thead><tr><th>Indicator</th><th>1 week</th><th>1 month</th><th>3 months</th></tr></thead><tbody id="timeframes"></tbody></table></div>
@@ -230,7 +252,13 @@ function renderHistory(h){
  const arrow=d1>0.25?"↑ rising":d1<-0.25?"↓ falling":"→ broadly stable";
  rd.textContent="Direction: "+arrow+" • 1m "+(d1>=0?"+":"")+d1.toFixed(1)+" • 3m "+(d3>=0?"+":"")+d3.toFixed(1);
 const vals=a.map(x=>x.risk),mn=Math.min(...vals),mx=Math.max(...vals),sp=mx-mn||1,w=600,hh=90,pts=vals.map((v,i)=>`${i/(vals.length-1)*w},${hh-8-(v-mn)/sp*(hh-16)}`).join(" ");const svg=$("riskHistory");svg.setAttribute("viewBox",`0 0 ${w} ${hh}`);svg.innerHTML=`<polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="3"/>`;$("historyNote").textContent=`${a.length} stored observations • latest automated risk ${vals[vals.length-1].toFixed(1)}/10`}
-async function load(){try{const [r,h]=await Promise.all([fetch("data.json?"+Date.now()),fetch("history.json?"+Date.now())]);if(!r.ok)throw 0;const d=await r.json();const hd=h.ok?await h.json():{history:[]};transform(d);classify();renderAlerts();renderTimeframes();renderHistory(hd);$("status").textContent="Last data refresh: "+new Date(d.updated_utc).toLocaleString();}catch(e){$("status").textContent="Data file unavailable. The automatic refresh may not have run yet.";}}
+async function load(){try{const [r,h]=await Promise.all([fetch("data.json?"+Date.now()),fetch("history.json?"+Date.now())]);if(!r.ok)throw 0;const d=await r.json();const hd=h.ok?await h.json():{history:[]};transform(d);
+if(d.australia){
+ const a=d.australia;
+ if($("v-AUCPI")){$("v-AUCPI").textContent=(a.headline_yoy!=null?a.headline_yoy.toFixed(1)+"% YoY":"—");$("s-AUCPI").textContent=a.headline_prev_yoy!=null?(a.headline_yoy>a.headline_prev_yoy?"↑ up from ":"↓ down from ")+a.headline_prev_yoy.toFixed(1)+"% previous month":"Latest ABS reading";$("s-AUCPI").className="trend "+(a.headline_prev_yoy!=null&&a.headline_yoy>a.headline_prev_yoy?"warn":"");$("d-AUCPI").textContent="Reference period: "+(a.reference_period||"latest");}
+ if($("v-AUTRIM")){$("v-AUTRIM").textContent=(a.trimmed_mean_yoy!=null?a.trimmed_mean_yoy.toFixed(1)+"% YoY":"—");$("s-AUTRIM").textContent=a.trimmed_prev_yoy!=null?(Math.abs(a.trimmed_mean_yoy-a.trimmed_prev_yoy)<0.05?"→ unchanged at ":a.trimmed_mean_yoy>a.trimmed_prev_yoy?"↑ up from ":"↓ down from ")+a.trimmed_prev_yoy.toFixed(1)+"% previous month":"Underlying inflation";$("s-AUTRIM").className="trend "+(a.trimmed_mean_yoy>3?"warn":"");$("d-AUTRIM").textContent="Reference period: "+(a.reference_period||"latest");}
+}
+classify();renderAlerts();renderTimeframes();renderHistory(hd);$("status").textContent="Last data refresh: "+new Date(d.updated_utc).toLocaleString();}catch(e){$("status").textContent="Data file unavailable. The automatic refresh may not have run yet.";}}
 load();
 </script>
 </body></html>
