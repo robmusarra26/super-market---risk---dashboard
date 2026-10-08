@@ -1,4 +1,4 @@
-import csv, io, json, os, urllib.request
+import csv, io, json, os, re, urllib.request
 from datetime import datetime, timezone, date, timedelta
 
 SERIES=["DGS10","BAMLH0A0HYM2","T10Y2Y","VIXCLS","ICSA","PCEPILFE","DCOILWTICO"]
@@ -19,6 +19,51 @@ def fetch(sid):
         except ValueError:
             pass
     return rows[-800:]
+
+def fetch_australia_inflation(previous=None):
+    url="https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/latest-release"
+    try:
+        req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 MarketRiskDashboard/4.0"})
+        with urllib.request.urlopen(req,timeout=30) as r:
+            html=r.read().decode("utf-8","ignore")
+        text=re.sub(r"<[^>]+>"," ",html)
+        text=re.sub(r"\s+"," ",text)
+
+        ref=None
+        m=re.search(r"Reference period\s+([A-Za-z]+\s+20\d{2})",text,re.I)
+        if m: ref=m.group(1)
+
+        headline=None
+        m=re.search(r"Consumer Price Index \(CPI\) rose\s+([0-9]+(?:\.[0-9]+)?)%",text,re.I)
+        if m: headline=float(m.group(1))
+
+        hprev=None
+        m=re.search(r"Consumer Price Index \(CPI\) rose\s+[0-9]+(?:\.[0-9]+)?%,\s+(?:up|down) from\s+([0-9]+(?:\.[0-9]+)?)%",text,re.I)
+        if m: hprev=float(m.group(1))
+
+        trim=None
+        m=re.search(r"Trimmed mean inflation was\s+([0-9]+(?:\.[0-9]+)?)%",text,re.I)
+        if m: trim=float(m.group(1))
+
+        tprev=None
+        m=re.search(r"Trimmed mean inflation was\s+[0-9]+(?:\.[0-9]+)?%,\s+(?:up|down|unchanged)\s*(?:from|at)?\s*([0-9]+(?:\.[0-9]+)?)%",text,re.I)
+        if m: tprev=float(m.group(1))
+
+        if headline is None and trim is None:
+            raise ValueError("ABS inflation values not found")
+
+        return {
+            "reference_period":ref,
+            "headline_yoy":headline,
+            "headline_prev_yoy":hprev,
+            "trimmed_mean_yoy":trim,
+            "trimmed_prev_yoy":tprev,
+            "source":"ABS"
+        }
+    except Exception as e:
+        if previous:
+            return previous
+        return {"reference_period":None,"headline_yoy":None,"headline_prev_yoy":None,"trimmed_mean_yoy":None,"trimmed_prev_yoy":None,"source":"ABS","error":str(e)}
 
 def idx_before(obs, ds):
     idx=-1
@@ -75,7 +120,15 @@ def month_end(y,m):
         return date(y,12,31)
     return date(y,m+1,1)-timedelta(days=1)
 
-out={"updated_utc":datetime.now(timezone.utc).isoformat(),"series":{}}
+previous_australia=None
+if os.path.exists("data.json"):
+    try:
+        with open("data.json","r",encoding="utf-8") as pf:
+            previous_australia=json.load(pf).get("australia")
+    except Exception:
+        pass
+
+out={"updated_utc":datetime.now(timezone.utc).isoformat(),"series":{},"australia":fetch_australia_inflation(previous_australia)}
 for sid in SERIES:
     out["series"][sid]={"observations":fetch(sid)}
 
