@@ -2,61 +2,56 @@
   "history": [
     {
       "date": "2025-11-30",
-      "risk": 1.5,
+      "risk": 2.8,
       "kind": "monthly_backfill"
     },
     {
       "date": "2025-12-31",
-      "risk": 1.5,
+      "risk": 3.4,
       "kind": "monthly_backfill"
     },
     {
       "date": "2026-01-31",
-      "risk": 1.5,
+      "risk": 4.2,
       "kind": "monthly_backfill"
     },
     {
       "date": "2026-02-28",
-      "risk": 1.5,
+      "risk": 2.9,
       "kind": "monthly_backfill"
     },
     {
       "date": "2026-03-31",
-      "risk": 1.5,
+      "risk": 4.9,
       "kind": "monthly_backfill"
     },
     {
       "date": "2026-04-30",
-      "risk": 1.5,
+      "risk": 2.8,
       "kind": "monthly_backfill"
     },
     {
       "date": "2026-05-31",
-      "risk": 1.5,
+      "risk": 4.0,
       "kind": "monthly_backfill"
     },
     {
       "date": "2026-06-30",
-      "risk": 1.5,
+      "risk": 2.8,
       "kind": "monthly_backfill"
     },
     {
       "date": "2026-07-31",
-      "risk": 1.5,
+      "risk": 3.2,
       "kind": "monthly_backfill"
     },
     {
       "date": "2026-08-31",
-      "risk": 2.2,
+      "risk": 3.4,
       "kind": "monthly_backfill"
     },
     {
       "date": "2026-09-30",
-      "risk": 4.3,
-      "kind": "monthly_backfill"
-    },
-    {
-      "date": "2026-10-31",
       "risk": 4.3,
       "kind": "monthly_backfill"
     },
@@ -66,6 +61,14 @@
       "DGS10": 5.24,
       "credit": 3.24,
       "VIX": 16.39,
+      "kind": "daily"
+    },
+    {
+      "date": "2026-10-26",
+      "risk": 4.5,
+      "DGS10": 5.0,
+      "credit": 3.38,
+      "VIX": 19.45,
       "kind": "daily"
     }
   ]
