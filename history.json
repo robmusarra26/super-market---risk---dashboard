@@ -86,6 +86,14 @@
       "credit": 3.18,
       "VIX": 17.52,
       "kind": "daily"
+    },
+    {
+      "date": "2026-10-29",
+      "risk": 4.3,
+      "DGS10": 5.05,
+      "credit": 3.14,
+      "VIX": 16.91,
+      "kind": "daily"
     }
   ]
 }
